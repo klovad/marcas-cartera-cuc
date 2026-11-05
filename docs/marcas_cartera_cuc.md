@@ -1,25 +1,26 @@
 # Marcas de cartera de créditos (cuenta 14) según el CUC
 
-> Advertencia: los rangos, el orden de segmentos y las bandas descritos aquí provienen de
-> memoria y deben validarse contra la versión vigente del CUC publicada por la
-> Superintendencia de Bancos antes de cargarse como parámetros.
+> Fuente: CUC de la Superintendencia de Bancos, plan de cuentas de activos actualizado con
+> la Resolución SB-2021-0403 (22-feb-2021),
+> [PDF oficial](https://www.superbancos.gob.ec/bancos/wp-content/uploads/downloads/2022/01/CUC-plan-cuentas-activos-28-dic-21.pdf).
+> El grupo 14 extraído está en `datos/cuc_grupo14_sb_2021_0403.csv` (230 cuentas).
+> Antes de cada corte conviene revisar si hay resoluciones posteriores que reformen el grupo 14.
 
 ## 1. Lógica posicional
 
-La cuenta de 4 dígitos `14NN` codifica estado, tipo y segmento en bloques regulares:
-8 segmentos × 3 tipos × 3 estados = 72 cuentas (1401–1472).
-
-Con `n = NN − 1`:
+La cuenta de 4 dígitos `14NN` codifica estado, tipo y segmento en bloques regulares de
+3 estados × 3 tipos × 8 posiciones (1401–1472). Con `n = NN − 1`:
 
 | Dimensión | Fórmula | Valores |
 |---|---|---|
-| Estado | `n / 24` (entera) | 0 Por vencer (vigente), 1 No devenga intereses, 2 Vencida |
+| Estado | `n / 24` (entera) | 0 Por vencer, 1 No devenga intereses, 2 Vencida |
 | Tipo | `(n % 24) / 8` | 0 Original, 1 Refinanciada, 2 Reestructurada |
-| Segmento | `n % 8` | 0 Comercial prioritario, 1 Consumo prioritario, 2 Inmobiliario, 3 Microcrédito, 4 Productivo, 5 Comercial ordinario, 6 Consumo ordinario, 7 Vivienda de interés público |
+| Segmento | `n % 8` | 0 Productivo, 1 Consumo, 2 Inmobiliario, 3 Microcrédito, 4–6 sin cuenta, 7 Vivienda de interés social y público |
+
+Las posiciones 4–6 de cada bloque (p. ej. 1405–1407, 1429–1431) no existen en el CUC: el
+bloque tiene 45 cuentas, no 72. Una cuenta en esas posiciones queda sin marca.
 
 Ejemplo: 1452 → n = 51 → estado 2, tipo 0, segmento 3 → microcrédito vencido original.
-
-Rangos resultantes:
 
 | Rango | Estado | Tipo |
 |---|---|---|
@@ -33,13 +34,32 @@ Rangos resultantes:
 | 1457–1464 | Vencida | Refinanciada |
 | 1465–1472 | Vencida | Reestructurada |
 
-### Dónde se rompe el patrón
-- Cuentas > 1472 (segmentos agregados después, p. ej. educativo, inversión pública) y la
-  1499 (provisiones): van en la tabla de excepciones.
-- Subcuentas de 6 dígitos (`14NNSS`): el sufijo es un ordinal de banda.
-  - Por vencer y no devenga: bandas uniformes de plazo al vencimiento
-    (05: 1–30, 10: 31–90, 15: 91–180, 20: 181–360, 25: >360 días).
-  - Vencida: el rango de días de mora depende del segmento → tabla de bandas por segmento.
+### Dónde se rompe el patrón (excepciones)
+
+| Cuentas | Contenido | Marca |
+|---|---|---|
+| 1473–1490 | Educativo e inversión pública alternados (impar educativo, par inversión pública), en bloques de 6 por estado y de 2 por tipo | Estado, tipo y segmento por excepción |
+| 1491–1493 | Refinanciada COVID-19 por vencer / no devenga / vencida | `COVID19`, sin segmento a 4 dígitos |
+| 1494–1496 | Reestructurada COVID-19 por vencer / no devenga / vencida | `COVID19`, sin segmento a 4 dígitos |
+| 1491xx–1496xx | Subcuenta por segmento: 05 productivo, 20 consumo, 30 inmobiliario, 35 vivienda de interés social y público, 40 microcrédito, 45 inversión pública, 50 educativo | Excepción de 6 dígitos (no es banda) |
+| 1499 | Provisiones, signo −1 | `PROVISION` |
+| 1499xx | 05, 10, 15, 20, 40, 55, 60 por segmento; 45 refinanciada; 50 reestructurada; 80, 85, 87, 89 genéricas | Segmento o tipo cuando aplica |
+
+### Bandas de días (subcuentas `14NNSS`)
+
+Solo la cartera **por vencer** tiene subcuentas de plazo al vencimiento, iguales para todos
+los segmentos (incluidos educativo e inversión pública): 05: 1–30, 10: 31–90, 15: 91–180,
+20: 181–360, 25: más de 360 días. En esta versión del CUC las cuentas que no devengan
+intereses y las vencidas **no tienen subcuentas de días**.
+
+### Subsegmentos
+
+El CUC define subsegmentos en la descripción de las cuentas (productivo corporativo,
+empresarial y PYMES; microcrédito minorista, de acumulación simple y de acumulación
+ampliada; subsegmentos de vivienda de interés social y público), pero **no les asigna
+código**: pide a las entidades llevar "registros adicionales". Por eso no se derivan del
+código CUC. Solo se pueden marcar si el catálogo interno del banco los separa en cuentas
+propias o desde la información por operación.
 
 ## 2. Proceso
 
@@ -103,6 +123,11 @@ Ajustes respecto al modelo de arriba:
 - `param_excepcion` acepta cuentas de 4 o 6 dígitos; la de 4 cubre sus subcuentas salvo
   que exista una de 6.
 - `n = NN − rango_desde` (con `rango_desde = 1` equivale a `NN − 1`).
+- La regla marca solo si resuelve estado, tipo y segmento; si no, la cuenta queda sin marca.
+- Una excepción de 6 dígitos define la subcuenta completa y no busca banda (COVID-19 y
+  provisiones); una de 4 dígitos deja que sus subcuentas tomen la banda por sufijo
+  (educativo e inversión pública por vencer).
+- Los segmentos pueden tener huecos de ordinal; estados y tipos no.
 - `control_alertas` agrega `fecha_corte` y `severidad` (BLOQUEANTE detiene el proceso).
 - Del catálogo del banco solo se marcan cuentas de 4 o más dígitos dentro de la raíz.
 

@@ -6,8 +6,9 @@
         estado   = n / bloque_estado
         tipo     = (n % bloque_estado) / bloque_tipo
         segmento = n % bloque_tipo
-   3. Banda (solo 6 dígitos): sufijo 14NNSS buscado por (estado, segmento, sufijo);
-      si no hay, la genérica del estado (segmento NULL).
+   3. Banda (solo 6 dígitos sin excepción propia): sufijo 14NNSS buscado por
+      (estado, segmento, sufijo); si no hay, la genérica del estado (segmento NULL).
+   Un segmento sin ordinal vigente deja la cuenta sin marca (p. ej. 1405-1407).
 
    La unicidad de filas vigentes la garantiza marcas.usp_validar_parametros; los TOP 1
    solo hacen el resultado determinista. */
@@ -72,12 +73,17 @@ OUTER APPLY (
       AND s.fecha_desde <= @fecha_corte AND (s.fecha_hasta IS NULL OR s.fecha_hasta >= @fecha_corte)
     ORDER BY s.fecha_desde DESC
 ) AS rs
-/* Marca final: excepción > regla */
+/* Marca final: excepción > regla. La regla marca solo si resuelve las tres dimensiones;
+   si falta una (posición sin segmento), la cuenta queda sin marca. */
+CROSS APPLY (
+    SELECT regla_completa = CASE WHEN re.codigo IS NOT NULL AND rt.codigo IS NOT NULL AND rs.codigo IS NOT NULL
+                                 THEN 1 ELSE 0 END
+) AS rc
 CROSS APPLY (
     SELECT
-        estado   = CASE WHEN x.cuenta_cuc IS NOT NULL THEN x.estado   ELSE re.codigo END,
-        tipo     = CASE WHEN x.cuenta_cuc IS NOT NULL THEN x.tipo     ELSE rt.codigo END,
-        segmento = CASE WHEN x.cuenta_cuc IS NOT NULL THEN x.segmento ELSE rs.codigo END
+        estado   = CASE WHEN x.cuenta_cuc IS NOT NULL THEN x.estado   WHEN rc.regla_completa = 1 THEN re.codigo END,
+        tipo     = CASE WHEN x.cuenta_cuc IS NOT NULL THEN x.tipo     WHEN rc.regla_completa = 1 THEN rt.codigo END,
+        segmento = CASE WHEN x.cuenta_cuc IS NOT NULL THEN x.segmento WHEN rc.regla_completa = 1 THEN rs.codigo END
 ) AS m
 OUTER APPLY (
     SELECT TOP (1) e.es_improductiva FROM marcas.param_estado AS e
@@ -90,6 +96,7 @@ OUTER APPLY (
     SELECT TOP (1) b.dias_desde, b.dias_hasta
     FROM marcas.param_banda AS b
     WHERE LEN(@cuenta_cuc) = 6
+      AND (x.cuenta_cuc IS NULL OR LEN(x.cuenta_cuc) = 4)   -- una excepción de 6 dígitos ya define la subcuenta
       AND b.estado = m.estado
       AND b.sufijo = RIGHT(@cuenta_cuc, 2)
       AND (b.segmento = m.segmento OR b.segmento IS NULL)

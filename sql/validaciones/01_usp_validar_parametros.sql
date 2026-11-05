@@ -79,8 +79,9 @@ BEGIN
     WHERE fecha_desde <= @fecha_corte AND (fecha_hasta IS NULL OR fecha_hasta >= @fecha_corte)
     GROUP BY estado, segmento, sufijo HAVING COUNT(*) > 1;
 
-    /* Ordinales que la regla necesita: estados = ceil(rango / bloque_estado),
-       tipos = bloque_estado / bloque_tipo, segmentos = bloque_tipo */
+    /* Ordinales que la regla necesita: estados = ceil(rango / bloque_estado) y
+       tipos = bloque_estado / bloque_tipo. Los segmentos pueden tener huecos (posiciones
+       sin cuenta en el CUC); una cuenta en un hueco queda sin marca y genera alerta. */
     WITH regla AS (
         SELECT cuenta_raiz, rango_desde, rango_hasta, bloque_estado, bloque_tipo
         FROM marcas.param_regla_posicional
@@ -97,9 +98,6 @@ BEGIN
         UNION ALL
         SELECT r.cuenta_raiz, 'TIPO', n.k
         FROM regla AS r JOIN numeros AS n ON n.k < r.bloque_estado / r.bloque_tipo
-        UNION ALL
-        SELECT r.cuenta_raiz, 'SEGMENTO', n.k
-        FROM regla AS r JOIN numeros AS n ON n.k < r.bloque_tipo
     )
     INSERT INTO marcas.control_alertas (fecha_corte, cuenta, regla_fallida, severidad, detalle)
     SELECT @fecha_corte, q.cuenta_raiz, 'ORDINAL_FALTANTE', 'BLOQUEANTE',
@@ -113,10 +111,6 @@ BEGIN
         SELECT 1 FROM marcas.param_tipo AS t
         WHERE q.dimension = 'TIPO' AND t.ordinal = q.k
           AND t.fecha_desde <= @fecha_corte AND (t.fecha_hasta IS NULL OR t.fecha_hasta >= @fecha_corte)
-        UNION ALL
-        SELECT 1 FROM marcas.param_segmento AS s
-        WHERE q.dimension = 'SEGMENTO' AND s.ordinal = q.k
-          AND s.fecha_desde <= @fecha_corte AND (s.fecha_hasta IS NULL OR s.fecha_hasta >= @fecha_corte)
     );
 
     /* Excepciones y bandas que apuntan a códigos inexistentes */

@@ -1,0 +1,231 @@
+cuenta_cuc;nombre
+1401;Cartera de crédito productivo por vencer
+140105;De 1 a 30 días
+140110;De 31 a 90 días
+140115;De 91 a 180 días
+140120;De 181 a 360 días
+140125;De más de 360 días
+1402;Cartera de crédito de consumo por vencer
+140205;De 1 a 30 días
+140210;De 31 a 90 días
+140215;De 91 a 180 días
+140220;De 181 a 360 días
+140225;De más de 360 días
+1403;Cartera de crédito inmobiliario por vencer
+140305;De 1 a 30 días
+140310;De 31 a 90 días
+140315;De 91 a 180 días
+140320;De 181 a 360 días
+140325;De más de 360 días
+1404;Cartera de microcrédito por vencer
+140405;De 1 a 30 días
+140410;De 31 a 90 días
+140415;De 91 a 180 días
+140420;De 181 a 360 días
+140425;De más de 360 días
+1408;Cartera de créditos de vivienda de interés social y público por vencer
+140805;De 1 a 30 días
+140810;De 31 a 90 días
+140815;De 91 a 180 días
+140820;De 181 a 360 días
+140825;De más de 360 días
+1409;Cartera de crédito productivo refinanciada por vencer
+140905;De 1 a 30 días
+140910;De 31 a 90 días
+140915;De 91 a 180 días
+140920;De 181 a 360 días
+140925;De más de 360 días
+1410;Cartera de crédito de consumo refinanciada por vencer
+141005;De 1 a 30 días
+141010;De 31 a 90 días
+141015;De 91 a 180 días
+141020;De 181 a 360 días
+141025;De más de 360 días
+1411;Cartera de crédito inmobiliario refinanciada por vencer
+141105;De 1 a 30 días
+141110;De 31 a 90 días
+141115;De 91 a 180 días
+141120;De 181 a 360 días
+141125;De más de 360 días
+1412;Cartera de microcrédito refinanciada por vencer
+141205;De 1 a 30 días
+141210;De 31 a 90 días
+141215;De 91 a 180 días
+141220;De 181 a 360 días
+141225;De más de 360 días
+1416;Cartera de créditos de vivienda de interés social y público refinanciada por vencer
+141605;De 1 a 30 días
+141610;De 31 a 90 días
+141615;De 91 a 180 días
+141620;De 181 a 360 días
+141625;De más de 360 días
+1417;Cartera de crédito productivo reestructurada por vencer
+141705;De 1 a 30 días
+141710;De 31 a 90 días
+141715;De 91 a 180 días
+141720;De 181 a 360 días
+141725;De más de 360 días
+1418;Cartera de crédito de consumo reestructurada por vencer
+141805;De 1 a 30 días
+141810;De 31 a 90 días
+141815;De 91 a 180 días
+141820;De 181 a 360 días
+141825;De más de 360 días
+1419;Cartera de crédito inmobiliario reestructurada por vencer
+141905;De 1 a 30 días
+141910;De 31 a 90 días
+141915;De 91 a 180 días
+141920;De 181 a 360 días
+141925;De más de 360 días
+1420;Cartera de microcrédito reestructurada por vencer
+142005;De 1 a 30 días
+142010;De 31 a 90 días
+142015;De 91 a 180 días
+142020;De 181 a 360 días
+142025;De más de 360 días
+1424;Cartera de crédito de vivienda de interés social y público reestructurada por vencer
+142405;De 1 a 30 días
+142410;De 31 a 90 días
+142415;De 91 a 180 días
+142420;De 181 a 360 días
+142425;De más de 360 días
+1425;Cartera de crédito productivo que no devenga intereses
+1426;Cartera de crédito de consumo que no devenga intereses
+1427;Cartera de crédito inmobiliario que no devenga intereses
+1428;Cartera de microcrédito que no devenga intereses
+1432;Cartera de crédito de vivienda de interés social y público que no devenga intereses
+1433;Cartera de crédito productivo refinanciada que no devenga intereses
+1434;Cartera de crédito de consumo refinanciada que no devenga intereses
+1435;Cartera de crédito inmobiliario refinanciada que no devenga intereses
+1436;Cartera de microcrédito refinanciada que no devenga intereses
+1440;Cartera de créditos de vivienda de interés social y público refinanciada que no devenga intereses
+1441;Cartera de crédito productivo reestructurada que no devenga intereses
+1442;Cartera de crédito de consumo reestructurada que no devenga intereses
+1443;Cartera de crédito inmobiliario reestructurada que no devenga intereses
+1444;Cartera de microcrédito reestructurada que no devenga intereses
+1448;Cartera de crédito de vivienda de interés social y público reestructurada que no devenga intereses
+1449;Cartera de crédito productivo vencida
+1450;Cartera de crédito de consumo vencida
+1451;Cartera de crédito inmobiliario vencida
+1452;Cartera de microcrédito vencida
+1456;Cartera de créditos de vivienda de interés social y público vencida
+1457;Cartera de crédito productivo refinanciada vencida
+1458;Cartera de crédito de consumo refinanciada vencida
+1459;Cartera de crédito inmobiliario refinanciada vencida
+1460;Cartera de microcrédito refinanciada vencida
+1464;Cartera de crédito de vivienda de interés social y público refinanciada vencida
+1465;Cartera de crédito productivo reestructurada vencida
+1466;Cartera de crédito de consumo reestructurada vencida
+1467;Cartera de crédito inmobiliario reestructurada vencida
+1468;Cartera de microcrédito reestructurada vencida
+1472;Cartera de crédito de vivienda de interés social y público reestructurada vencida
+1473;Cartera de crédito educativo por vencer
+147305;De 1 a 30 días
+147310;De 31 a 90 días
+147315;De 91 a 180 días
+147320;De 181 a 360 días
+147325;De más de 360 días
+1474;Cartera de crédito de inversión pública por vencer
+147405;De 1 a 30 días
+147410;De 31 a 90 días
+147415;De 91 a 180 días
+147420;De 181 a 360 días
+147425;De más de 360 días
+1475;Cartera de crédito educativo refinanciada por vencer
+147505;De 1 a 30 días
+147510;De 31 a 90 días
+147515;De 91 a 180 días
+147520;De 181 a 360 días
+147525;De más de 360 días
+1476;Cartera de crédito de inversión pública refinanciada por vencer
+147605;De 1 a 30 días
+147610;De 31 a 90 días
+147615;De 91 a 180 días
+147620;De 181 a 360 días
+147625;De más de 360 días
+1477;Cartera de crédito educativo reestructurada por vencer
+147705;De 1 a 30 días
+147710;De 31 a 90 días
+147715;De 91 a 180 días
+147720;De 181 a 360 días
+147725;De más de 360 días
+1478;Cartera de crédito de inversión pública reestructurada por vencer
+147805;De 1 a 30 días
+147810;De 31 a 90 días
+147815;De 91 a 180 días
+147820;De 181 a 360 días
+147825;De más de 360 días
+1479;Cartera de crédito educativo que no devenga intereses
+1480;Cartera de crédito de inversión pública que no devenga intereses
+1481;Cartera de crédito educativo refinanciada que no devenga intereses
+1482;Cartera de crédito de inversión pública refinanciada que no devenga intereses
+1483;Cartera de crédito educativo reestructurada que no devenga intereses
+1484;Cartera de crédito de inversión pública reestructurada que no devenga intereses
+1485;Cartera de crédito educativa vencida
+1486;Cartera de crédito de inversión pública vencida
+1487;Cartera de crédito educativo refinanciada vencida
+1488;Cartera de crédito de inversión pública refinanciada vencida
+1489;Cartera de crédito educativo reestructurada vencida
+1490;Cartera de crédito de inversión pública reestructurada vencida
+1491;Cartera Refinanciada COVID-19 por Vencer
+149105;Productivo
+149120;Consumo
+149130;Inmobiliario
+149135;Vivienda de interés social y público
+149140;Microcrédito
+149145;De Inversión Pública
+149150;Educativo
+1492;Refinanciada COVID-19 que no Devenga interés
+149205;Productivo
+149220;Consumo
+149230;Inmobiliario
+149235;Vivienda de interés social y público
+149240;Microcrédito
+149245;De Inversión Pública
+149250;Educativo
+1493;Refinanciada COVID-19 Vencida
+149305;Productivo
+149320;Consumo
+149330;Inmobiliario
+149335;Vivienda de interés social y público
+149340;Microcrédito
+149345;De Inversión Pública
+149350;Educativo
+1494;Cartera Reestructurada COVID-19 por Vencer
+149405;Productivo
+149420;Consumo
+149430;Inmobiliario
+149435;Vivienda de interés social y público
+149440;Microcrédito
+149445;De Inversión Pública
+149450;Educativo
+1495;Cartera Reestructurada COVID-19 que no Devenga Interés
+149505;Productivo
+149520;Consumo
+149530;Inmobiliario
+149535;Vivienda de interés social y público
+149540;Microcrédito
+149545;De Inversión Pública
+149550;Educativo
+1496;Cartera Reestructurada COVID-19 Vencida
+149605;Productivo
+149620;Consumo
+149630;Inmobiliario
+149635;Vivienda de interés social y público
+149640;Microcrédito
+149645;De Inversión Pública
+149650;Educativo
+1499;(Provisiones para créditos incobrables)
+149905;(Cartera de créditos productivo)
+149910;(Cartera de créditos de consumo)
+149915;(Cartera de crédito inmobiliario)
+149920;(Cartera de créditos para el microcrédito)
+149940;(Cartera de crédito de vivienda de interés social y público
+149945;(Cartera de créditos refinanciada)
+149950;(Cartera de créditos reestructurada)
+149955;(Cartera de crédito educativo)
+149960;(Cartera de créditos de inversión pública)
+149980;(Provisión genérica por tecnología crediticia)
+149985;(Provisión anticíclica)
+149987;(Provisiones no reversadas por requerimiento normativo)
+149989;(Provisión genérica voluntaria)

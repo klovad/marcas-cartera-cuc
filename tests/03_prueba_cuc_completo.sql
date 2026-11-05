@@ -56,10 +56,11 @@ discrepancias AS (
            OR (o.codigo <> m.tipo AND m.nombre     LIKE N'%' + o.palabra_clave + N'%' COLLATE Latin1_General_CI_AI))
 
     UNION ALL
-    /* Segmento: contiene su palabra clave */
+    /* Segmento: contiene su palabra clave. Aplica a las cuentas de 4 dígitos y a las
+       subcuentas que no son bandas (COVID-19 por segmento, provisiones por segmento) */
     SELECT m.cuenta_cuc, m.nombre, N'SEGMENTO', CONCAT(m.segmento, N' (', s.palabra_clave, N')')
     FROM marcado AS m JOIN vig_segmento AS s ON s.codigo = m.segmento
-    WHERE m.nivel = 4 AND s.palabra_clave IS NOT NULL
+    WHERE (m.nivel = 4 OR m.dias_desde IS NULL) AND s.palabra_clave IS NOT NULL
       AND m.nombre NOT LIKE N'%' + s.palabra_clave + N'%' COLLATE Latin1_General_CI_AI
 
     UNION ALL

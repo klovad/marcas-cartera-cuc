@@ -9,6 +9,7 @@
 :r sql/ddl/04_tablas_resultado.sql
 
 :r sql/params/01_carga_inicial.sql
+:r sql/datos/01_cuc_oficial_grupo14.sql
 
 :r sql/motor/01_fn_marcar_cuenta.sql
 :r sql/motor/02_usp_marcar_cuc.sql

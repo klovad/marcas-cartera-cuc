@@ -12,9 +12,12 @@ Motor: **SQL Server** (2016 SP1 o superior por `CREATE OR ALTER`, `CONCAT_WS` re
 ## Cómo funciona
 
 1. Las reglas del CUC se cargan en **tablas de parámetros con vigencia**
-   (`fecha_desde`, `fecha_hasta`).
-2. El **motor de marcas** decodifica cada cuenta `14NN` por posición
-   (8 segmentos × 3 tipos × 3 estados = 1401–1472) y aplica excepciones y bandas.
+   (`fecha_desde`, `fecha_hasta`), tomadas del
+   [CUC oficial](https://www.superbancos.gob.ec/bancos/wp-content/uploads/downloads/2022/01/CUC-plan-cuentas-activos-28-dic-21.pdf)
+   (Resolución SB-2021-0403).
+2. El **motor de marcas** decodifica cada cuenta `14NN` por posición (bloques de
+   3 estados × 3 tipos × 8 posiciones en 1401–1472) y aplica excepciones (educativo,
+   inversión pública, COVID-19, provisiones) y bandas de días (solo por vencer).
 3. El catálogo del banco se cruza con el CUC marcado por **prefijo más largo**
    (6 dígitos, luego 4).
 4. Las **validaciones** detienen el proceso si alguna cuenta 14 queda sin marca.
@@ -35,6 +38,9 @@ El diseño completo está en [`docs/marcas_cartera_cuc.md`](docs/marcas_cartera_
 | `docs/` | Diseño, modelo de tablas y validaciones |
 | `sql/ddl/` | Esquema `marcas` y tablas de entrada, parámetros, resultado y control |
 | `sql/params/` | Carga inicial de parámetros (idempotente) |
+| `sql/datos/` | Carga del grupo 14 del CUC oficial en `marcas.cuc_oficial` |
+| `datos/` | Grupo 14 del CUC extraído del PDF (CSV, para revisión) |
+| `scripts/extraer_cuc_pdf.py` | Regenera `datos/` y `sql/datos/` desde un PDF nuevo del CUC (requiere `pypdf`) |
 | `sql/motor/` | `fn_marcar_cuenta`, `usp_marcar_cuc`, `usp_marcar_catalogo_banco`, `usp_proceso_marcas` |
 | `sql/validaciones/` | `usp_validar_parametros` (antes de marcar) y `usp_validar_resultados` (después) |
 | `sql/despliegue.sql` | Ejecuta todo en orden (modo SQLCMD) |
@@ -48,8 +54,8 @@ Desplegar (scripts idempotentes, desde la raíz del repo):
 sqlcmd -S <servidor> -d <base> -E -b -i sql/despliegue.sql
 ```
 
-Cargar las entradas `marcas.cuc_oficial` (CUC publicado) y `marcas.catalogo_banco`, y correr
-el proceso para una fecha de corte:
+El despliegue ya carga el grupo 14 del CUC en `marcas.cuc_oficial`. Cargar
+`marcas.catalogo_banco` con el catálogo interno y correr el proceso para una fecha de corte:
 
 ```sql
 EXEC marcas.usp_proceso_marcas @fecha_corte = '2026-10-31';
@@ -75,16 +81,14 @@ sqlcmd -S <servidor> -d <base> -E -b -i tests/01_prueba_regla_posicional.sql
 | Prueba | Qué valida | Datos |
 |---|---|---|
 | `01_prueba_regla_posicional.sql` | Casos conocidos y que 1401–1472 den 72 combinaciones distintas | Solo parámetros |
-| `02_prueba_proceso.sql` | Proceso completo, match por prefijo y que la falta de cobertura lo detenga | Sintéticos, con `ROLLBACK`; **solo en base de desarrollo** |
-| `03_prueba_cuc_completo.sql` | Recorre el CUC cargado y compara la marca calculada con el nombre oficial | El CUC real en `marcas.cuc_oficial` |
+| `02_prueba_proceso.sql` | Proceso completo, match por prefijo y que la falta de cobertura lo detenga | Catálogo de banco sintético sobre el CUC oficial, con `ROLLBACK`; **solo en base de desarrollo** |
+| `03_prueba_cuc_completo.sql` | Recorre el CUC cargado y compara la marca calculada con el nombre oficial | El CUC oficial en `marcas.cuc_oficial` |
 
 ## Estado
 
 - [x] DDL, carga de parámetros, motor, validaciones y pruebas en SQL Server.
-- [x] Pruebas 01 y 02 pasan en SQL Server 2022; la 03 probada con un CUC sintético.
-- [ ] **Validar los parámetros contra el CUC vigente** corriendo `03_prueba_cuc_completo.sql`
-      con el catálogo oficial: rangos 1401–1472, orden de segmentos y palabras clave. Los
-      valores actuales se escribieron de memoria.
-- [ ] Cargar las excepciones de cuentas > 1472 (educativo, inversión pública, ...).
-- [ ] Cargar las bandas de días de cartera vencida por segmento.
-- [ ] Ajustar `@vigencia_desde` en `sql/params/01_carga_inicial.sql`.
+- [x] Parámetros validados contra el CUC oficial (SB-2021-0403): las 230 cuentas del grupo 14
+      quedan marcadas y coinciden con su nombre. Las tres pruebas pasan en SQL Server 2022.
+- [ ] Revisar si hay resoluciones posteriores a la SB-2021-0403 que reformen el grupo 14.
+- [ ] Subsegmentos de crédito: el CUC no les asigna código; se podrán marcar si el catálogo
+      interno del banco los separa en cuentas propias.
