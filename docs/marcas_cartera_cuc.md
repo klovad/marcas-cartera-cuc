@@ -93,7 +93,23 @@ versión vigente a la `fecha_corte`, lo que permite reprocesar meses pasados.
 - Cartera improductiva = estados con es_improductiva = 'S' (no devenga + vencida).
 - Morosidad = cartera improductiva / cartera bruta.
 
-## 6. Motor (borrador, SQL genérico)
+## 6. Implementación en SQL Server
+
+Ajustes respecto al modelo de arriba:
+
+- Esquema `marcas`. Entradas: `cuc_oficial` (CUC publicado, con vigencia) y `catalogo_banco`.
+- `param_tipo` y `param_segmento` también llevan `palabra_clave` (solo para la prueba de
+  CUC completo). `ordinal` nulo = solo asignable por excepción (segmentos > 1472).
+- `param_excepcion` acepta cuentas de 4 o 6 dígitos; la de 4 cubre sus subcuentas salvo
+  que exista una de 6.
+- `n = NN − rango_desde` (con `rango_desde = 1` equivale a `NN − 1`).
+- `control_alertas` agrega `fecha_corte` y `severidad` (BLOQUEANTE detiene el proceso).
+- Del catálogo del banco solo se marcan cuentas de 4 o más dígitos dentro de la raíz.
+
+Orden del proceso (`marcas.usp_proceso_marcas`): validar parámetros → marcar CUC →
+marcar catálogo del banco → validar resultados.
+
+## 7. Motor (borrador original, SQL genérico)
 
 ```sql
 SELECT c.cuenta,
